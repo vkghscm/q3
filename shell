@@ -1,0 +1,32 @@
+#!/bin/bash
+
+######### Install Tomcat and start tomcat ##############
+
+yum install tomcat -y
+
+systemctl enable tomcat
+
+systemctl start tomcat
+
+systemctl stop tomcat
+
+##### Validate if Tomcat is running ##################
+
+# Name of the Tomcat service
+TOMCAT_SERVICE_NAME=tomcat
+
+# Check the status of the Tomcat service
+if systemctl is-active --quiet $TOMCAT_SERVICE_NAME; then
+  echo "Tomcat is running."
+else
+  echo "Tomcat is not running. Starting Tomcat service..."
+  systemctl start $TOMCAT_SERVICE_NAME
+fi
+
+################ schedule a shell script to start tomcat at 6AM every weekday #################
+
+-------------------------------------------------------------------------------------------------------------
+
+(crontab -l ; echo "0 6 * * 1-5 /home/ec2-user/start_tomcat.sh") | crontab -
+
+crontab -l
